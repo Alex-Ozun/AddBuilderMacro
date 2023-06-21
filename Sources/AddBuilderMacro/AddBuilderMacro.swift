@@ -5,4 +5,4 @@
 public macro AddBuilder() = #externalMacro(module: "AddBuilderMacroMacros", type: "AddBuilderMacro")
 
 @attached(member, names: arbitrary)
-public macro AddBuilder<T>(default: T) = #externalMacro(module: "AddBuilderMacroMacros", type: "BuilderDefault")
+public macro Builder<T>(default: T) = #externalMacro(module: "AddBuilderMacroMacros", type: "BuilderDefault")

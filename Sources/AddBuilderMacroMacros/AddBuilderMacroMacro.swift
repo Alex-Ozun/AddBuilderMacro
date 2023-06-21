@@ -14,14 +14,12 @@ public struct AddBuilderMacro: MemberMacro {
       guard let memberName = declaration.asProtocol(IdentifiedDeclSyntax.self)?.identifier.text else {
           fatalError()
       }
-      guard let _ = declaration.as(StructDeclSyntax.self) else {
+      guard declaration.is(StructDeclSyntax.self) else {
           context.diagnose(
             AddBuilderMacroDiagnostic.requiresStruct.diagnose(at: node)
           )
           return []
       }
-      let tupleSyntax = node.argument?.as(TupleExprElementListSyntax.self)
-      let content = tupleSyntax?.first?.expression.as(DictionaryExprSyntax.self)
       let variables = declaration.memberBlock.members
         .compactMap { $0.decl.as(VariableDeclSyntax.self) }
         .compactMap(Variable.init)
@@ -102,7 +100,7 @@ extension TypeSyntax {
     if let type = self.as(SimpleTypeIdentifierSyntax.self) {
       return try type.getDefaultValue()
     } else if self.is(ArrayTypeSyntax.self) || self.is(DictionaryTypeSyntax.self){
-      return ".init()"
+      return self.description + "()"
     } else if let type = self.as(OptionalTypeSyntax.self) {
       do {
         return try type.wrappedType.getDefaultValue()
@@ -133,10 +131,16 @@ extension SimpleTypeIdentifierSyntax {
       return ".zero"
       
     case "Range":
-      fatalError()
+      guard let boundType = genericArgumentClause?.arguments.first?.argumentType.description else {
+        throw TypeError.unsupportedType
+      }
+      return "(\(boundType)()..<\(boundType)())"
       
     case "ClosedRange":
-      fatalError()
+      guard let boundType = genericArgumentClause?.arguments.first?.argumentType.description else {
+        throw TypeError.unsupportedType
+      }
+      return "(\(boundType)()...\(boundType)())"
       
     case "Character":
       return "\"/\""
@@ -145,7 +149,7 @@ extension SimpleTypeIdentifierSyntax {
       return "Date(timeIntervalSince1970: 0)"
       
     case "UUID":
-      return "UUID(uuidString: \"00000000-0000-0000-0000-000000000000\")"
+      return "UUID(uuidString: \"00000000-0000-0000-0000-000000000000\")!"
 
     case "URL":
       return "URL(string: \"/\")!"
@@ -161,7 +165,7 @@ extension SimpleTypeIdentifierSyntax {
       "Set", "NSSet",
       "Array", "NSArray",
       "Dictionary", "NSDictionary":
-      return ".init()"
+      return self.description + "()"
       
     case "Result":
       guard let succesType = genericArgumentClause?.arguments.first?.argumentType else {
@@ -180,7 +184,7 @@ extension SimpleTypeIdentifierSyntax {
       }
       
     default:
-      throw TypeError.unsupportedType
+      return self.description + ".Builder().build()"
     }
   }
 }

@@ -13,6 +13,7 @@ final class AddBuilderMacroTests: XCTestCase {
             """
             @AddBuilder()
             struct Person {
+              let generic: Range<Int>
               let name: String
               @AddBuilder(default: Cat(name: "Bob"))
               let cat: Cat
