@@ -9,8 +9,9 @@ This:
 @AddBuilder()
 struct Person {
   let name: String
-  var middleName: String?
-  let age: Int
+  let dateOfBirth: Date
+  let height: Float
+  let website: URL
   @AddBuilder(default: Cat(name: "Bob"))
   let cat: Cat
 }
@@ -25,8 +26,9 @@ Expands into:
 ```swift
 struct Person {
   let name: String
-  var middleName: String?
-  let age: Int
+  let dateOfBirth: Date
+  let height: Float
+  let website: URL
   let cat: Cat
   
   struct Builder {
