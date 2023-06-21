@@ -9,8 +9,9 @@ struct Bla {
 @AddBuilder()
 struct Person {
   let name: String
-  var middleName: String?
-  let age: Int
+  let dateOfBirth: Date
+  let height: Float
+  let website: URL
   @AddBuilder(default: Cat(name: "Bob"))
   let cat: Cat
 }
@@ -26,3 +27,11 @@ let person = Person
   .build()
 
 print(person)
+print(person.website)
+//Person(
+//  name: "Alex",
+//  dateOfBirth: 1970-01-01 00:00:00 +0000,
+//  height: 0.0,
+//  website: /,
+//  cat: Cat(name: "Bob")
+//)
