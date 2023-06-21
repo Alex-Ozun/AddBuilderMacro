@@ -1,4 +1,4 @@
-# AddBuilderMacro
+# @Builder macro
 
 Adds a Builder with SwiftUI-like declarative chaining API.
 Automarically sets default values for most of the common data types.
