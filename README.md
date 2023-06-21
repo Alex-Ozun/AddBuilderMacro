@@ -1,6 +1,7 @@
 # AddBuilderMacro
 
-Adds a Builder with SwiftUI-like declarative chaining API. 
+Adds a Builder with SwiftUI-like declarative chaining API.
+Sets default values for most of the common data types, unless overriden (see `cat` property below).
 
 This:
 
